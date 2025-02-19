@@ -1,0 +1,23 @@
+{% extends "trainer/base.html" %}
+
+{% block title %}
+  Trainer_login
+{% endblock title %}
+
+{% block content %}
+<center>
+    <h1>Trainer Login Page</h1>
+</center>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Username</label>
+      <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="un">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="text" class="form-control" id="exampleInputPassword1" name="pw">
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+{% endblock content %}

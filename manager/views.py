@@ -5,11 +5,23 @@ from django.urls import reverse
 import random
 import string
 from  django.core.mail import send_mail
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
+
+# def login_required(func):
+#    def inner(request,*args,**kwargs):
+#        un = request.session.get('username')
+#        if un:
+#            return func(request,*args,**kwargs)
+#        return HttpResponseRedirect(reverse('manager_login')) 
+#    return inner
 
 def manager_home(request):
     return render(request,'manager/manager_home.html')
 
+@login_required
 def add_employee(request):
     EEUFO = EmployeeUserForm()
     EEPFO = EmployeeProfileForm()
@@ -23,16 +35,17 @@ def add_employee(request):
             MEUFDO = EUFDO.save(commit=False)
             MEUFDO.username = un
             MEUFDO.set_password(pw)
-            email = EUFDO.cleaned_data.get('email')
             MEUFDO.is_staff = True
             MEUFDO.save()
+            
             MEPFDO = EPFDO.save(commit=False)
             MEPFDO.username = MEUFDO
             MEPFDO.save()
             message = f"""Hello,Here are your account details:
             Username: {un}
             Password: {pw}
-            Please keep this information secure.
+            Please keep this information secure and rememer it.
+            And Don't Share this to anyone.
 
             Best Regards,
             QSPIDER/PYSPIDER/JSPIDER"""
@@ -41,12 +54,28 @@ def add_employee(request):
                 'Sucessfully Added New Employee',
                 message,
                 'abinashsahoo063@gmail.com',
-                [email],
+                [EUFDO.cleaned_data.get('email')],
                 fail_silently=False
             )
-            request.session['username'] = un
-            request.session['password'] = pw
             return HttpResponseRedirect(reverse('manager_home'))
         return HttpResponse('Invalid Data')
     return render(request,'manager/add_employee.html',d)
 
+def manager_login(request):
+    if request.method == 'POST':
+        un = request.POST.get('un')
+        pw = request.POST.get('pw')
+        AUO = authenticate(username=un,password=pw)
+        if AUO and AUO.is_active:
+            if AUO.is_superuser:
+                login(request,AUO)
+                request.session['managerun'] = un
+                return HttpResponseRedirect(reverse('manager_home'))
+            return HttpResponse('These creds are not of the superuser')
+        return HttpResponse('Invalid Credentials.')
+    return render(request,'manager/manager_login.html')
+
+@login_required
+def manager_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('manager_home'))

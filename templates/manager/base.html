@@ -23,15 +23,21 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{% url 'manager_home' %}">Home</a>
               </li>
+              {% if user.is_authenticated %}  
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'add_employee' %}">Add Employee</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">Login</a>
+                <a class="nav-link" href="{% url 'manager_logout' %}">Logout</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'manager_login' %}">Login</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">Something</a>
+                <a class="nav-link" href="">Something Else</a>
               </li>
+              {% endif %}
             </ul>
           </div>
         </div>

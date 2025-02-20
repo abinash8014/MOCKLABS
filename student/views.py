@@ -57,3 +57,10 @@ def student_login(request):
 def student_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('student_home'))
+
+@login_required
+def display_mockrating(request):
+    sun = request.session.get('username')
+    SO = User.objects.get(username=sun)
+    d = {'SO':SO}
+    return render(request,'student/display_mockrating.html',d)

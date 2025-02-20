@@ -3,8 +3,17 @@ from manager.forms import *
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate,login,logout
+from trainer.forms import *
 
 # Create your views here.
+def trainer_login_required(func):
+    def inner(request,*args,**kwargs):
+        tun = request.session.get('trainerun')
+        if tun:
+            return func(request,*args,**kwargs)
+        return HttpResponseRedirect(reverse('trainer_login'))
+    return inner
+
 def trainer_home(request):
     return render(request,'trainer/trainer_home.html')
 
@@ -23,6 +32,23 @@ def trainer_login(request):
         return HttpResponse('Invalid Credentials')
     return render(request,'trainer/trainer_login.html')
 
+@trainer_login_required
 def trainer_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('trainer_home'))
+
+@trainer_login_required
+def start_mock(request):
+    ERFO = RatingForm()
+    d = {'ERFO':ERFO}
+    if request.method == 'POST':
+        RFDO = RatingForm(request.POST)
+        if RFDO.is_valid():
+            tun = request.session.get('trainerun')
+            TO = User.objects.get(username=tun)
+            MRFDO = RFDO.save(commit=False)
+            MRFDO.conducted_by = TO
+            MRFDO.save()
+            return HttpResponseRedirect(reverse('trainer_home'))
+        return HttpResponse('Invalid Data')
+    return render(request,'trainer/start_mock.html',d)

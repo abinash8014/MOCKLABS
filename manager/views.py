@@ -67,12 +67,12 @@ def manager_login(request):
         un = request.POST.get('un')
         pw = request.POST.get('pw')
         AUO = authenticate(username=un,password=pw)
-        if AUO and AUO.is_active:
+        if AUO and AUO.is_active and AUO.is_staff:
             if AUO.is_superuser:
                 login(request,AUO)
                 request.session['managerun'] = un
                 return HttpResponseRedirect(reverse('manager_home'))
-            return HttpResponse('These creds are not of the superuser')
+            return HttpResponse('Not a admin.')
         return HttpResponse('Invalid Credentials.')
     return render(request,'manager/manager_login.html')
 

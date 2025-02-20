@@ -32,6 +32,7 @@ def add_employee(request):
         if EUFDO.is_valid() and EPFDO.is_valid():
             un = f"{EUFDO.cleaned_data.get('first_name')}{EPFDO.cleaned_data.get('pno')[-4:]}"
             pw = ''.join([random.choice(string.digits) for i in range(1,6)])
+            email = EUFDO.cleaned_data.get('email')
             MEUFDO = EUFDO.save(commit=False)
             MEUFDO.username = un
             MEUFDO.set_password(pw)
@@ -54,7 +55,7 @@ def add_employee(request):
                 'Sucessfully Added New Employee',
                 message,
                 'abinashsahoo063@gmail.com',
-                [EUFDO.cleaned_data.get('email')],
+                [email],
                 fail_silently=False
             )
             return HttpResponseRedirect(reverse('manager_home'))

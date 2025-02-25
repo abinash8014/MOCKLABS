@@ -1,0 +1,16 @@
+{% extends "student/base.html" %}
+
+{% block title %}
+  See_Timing | {{SO.first_name}}
+{% endblock title %}
+
+{% block content %}
+  <center>
+    <h1>
+        {% for ratings in SO.rating.all %}
+          Hello {{SO.first_name}},
+                your mock is conducted by {{ratings.conducted_by.first_name}} on {{ratings.conducted_on}} on {{ratings.subject}}
+        {% endfor %}
+    </h1>
+  </center>
+{% endblock content %}

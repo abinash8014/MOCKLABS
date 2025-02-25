@@ -4,6 +4,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate,login,logout
 from trainer.forms import *
+from student.models import *
 
 # Create your views here.
 def trainer_login_required(func):
@@ -40,15 +41,21 @@ def trainer_logout(request):
 @trainer_login_required
 def start_mock(request):
     ERFO = RatingForm()
-    d = {'ERFO':ERFO}
+    std_prf = StudentProfile.objects.all()
+    d = {'ERFO':ERFO,'std_prf':std_prf}
     if request.method == 'POST':
         RFDO = RatingForm(request.POST)
+        SDO = request.POST.get('student')
         if RFDO.is_valid():
             tun = request.session.get('trainerun')
             TO = User.objects.get(username=tun)
             MRFDO = RFDO.save(commit=False)
             MRFDO.conducted_by = TO
+            
+            # get the student object
+            SO = User.objects.get(username=SDO)
+            MRFDO.student = SO
             MRFDO.save()
-            return HttpResponseRedirect(reverse('trainer_home'))
+            return HttpResponseRedirect(reverse('start_mock'))
         return HttpResponse('Invalid Data')
     return render(request,'trainer/start_mock.html',d)

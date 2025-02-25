@@ -53,7 +53,13 @@ def student_login(request):
         return HttpResponse('Invalid Creds')
     return render(request,'student/student_login.html')
 
-@login_required
 def student_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('student_home'))
+
+@login_required
+def see_schedule(request):
+    sun = request.session.get('username')
+    SO = User.objects.get(username=sun)
+    d = {'SO':SO}
+    return render(request,'student/see_schedule.html',d)

@@ -1,0 +1,39 @@
+{% extends "hr/base.html" %}
+
+{% block title %}
+  Mock_Ratings
+{% endblock title %}
+
+{% block content %}
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">SlNo</th>
+        <th scope="col">Student</th>
+        <th scope="col">Subject</th>
+        <th scope="col">Technical</th>
+        <th scope="col">Communication</th>
+        <th scope="col">Programing</th>
+        <th scope="col">Remarks</th>
+        <th scope="col">Conducted By</th>
+        <th scope="col">Conducted On</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for std in SO  %}
+          
+        <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{std.student.username}}</td>
+            <td>{{std.subject}}</td>
+            <td>{{std.Technical}}</td>
+            <td>{{std.Communication}}</td>
+            <td>{{std.Programming}}</td>
+            <td>{{std.remarks}}</td>
+            <td>{{std.conducted_by.first_name}}</td>
+            <td>{{std.conducted_on}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

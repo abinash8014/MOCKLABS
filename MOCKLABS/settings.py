@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'student'
+    'student',
+    'manager',
+    'hr',
+    'trainer',
 ]
 
 MIDDLEWARE = [
@@ -119,6 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+# for static files
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
@@ -128,5 +132,15 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# for media
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
+
+# for email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'abinashsahoo063@gmail.com'
+EMAIL_HOST_PASSWORD = 'atrz bskz gitz lcvr'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587

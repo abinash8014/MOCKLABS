@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.contrib.auth import authenticate,login,logout
 from trainer.forms import *
 from student.models import *
+import random
+from django.core.mail import send_mail
 
 # Create your views here.
 def trainer_login_required(func):
@@ -59,3 +61,55 @@ def start_mock(request):
             return HttpResponseRedirect(reverse('start_mock'))
         return HttpResponse('Invalid Data')
     return render(request,'trainer/start_mock.html',d)
+
+def trainer_forget_pw(request):
+    if request.method == "POST":
+        un = request.POST.get('un')
+        # UO = User.objects.filter(username=un, is_staff=True, is_superuser=False).first()  # Ensuring only Trainers
+        UO = User.objects.get(username=un)
+        EO = EmployeeProfile.objects.get(username=UO)
+        print(EO)
+        if UO and UO.is_active and UO.is_staff and EO.Role=='Trainer':
+            otp = random.randint(1000,9999)
+            print(otp)
+            #email = UO.email
+            #print(email)
+            # send_mail(
+            #     'Forget your pw?',
+            #     'Here is your OTP:{otp}'
+            #     'abinashsahoo063@gmail.com',
+            #     [email],
+            #     fail_silently=False
+            # )
+            request.session['trainerotp'] = otp
+            request.session['trainerun'] = un
+            return HttpResponseRedirect(reverse('trainer_otp'))
+        
+        return HttpResponse('User not found or not a Trainer')
+    
+    return render(request,'trainer/trainer_forget_pw.html')
+
+def trainer_otp(request):
+    if request.method == 'POST':
+        eotp=request.POST.get('otp')
+        gotp=request.session.get('trainerotp')
+        un = request.session.get('trainerun')
+        if int(eotp)==gotp:
+            UO = User.objects.get(username=un)
+            login(request,UO)
+            return HttpResponseRedirect(reverse('trainer_change_pw'))
+        return HttpResponse('Otp not Matched')
+    return render(request,'trainer/trainer_otp.html')
+
+def trainer_change_pw(request):
+    if request.method == 'POST':
+        pw = request.POST.get('pw')
+        cpw=request.POST.get('cpw')
+        if pw==cpw:
+            username = request.session.get('trainerun')
+            UO = User.objects.get(username=username)
+            UO.set_password(pw)
+            UO.save()
+            return HttpResponseRedirect(reverse('trainer_login'))
+        return HttpResponse('password Not Matched')
+    return render(request,'trainer/trainer_change_pw.html')

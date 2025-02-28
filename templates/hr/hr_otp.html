@@ -1,0 +1,17 @@
+{% extends "hr/base.html" %}
+
+{% block title %}
+  OTP 
+{% endblock title %}
+
+{% block content %}
+  <center>
+    <h2>Otp Varification Page</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="otp">Enter the Otp:</label>
+        <input type="text" name="otp"><br><br>
+        <input type="submit" value="Submit OTP">
+    </form>
+  </center>
+{% endblock content %}

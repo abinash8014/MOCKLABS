@@ -80,3 +80,45 @@ def manager_login(request):
 def manager_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('manager_home'))
+
+def manager_forget_pw(request):
+    if request.method == "POST":
+        un = request.POST.get('un')
+        UO = User.objects.filter(username=un, is_superuser=True).first()  # Ensuring only Managers
+        
+        if UO:
+            otp = random.randint(1000,9999)
+            print(otp)
+            request.session['managerotp'] = otp
+            request.session['managerun'] = un
+            return HttpResponseRedirect(reverse('manager_otp'))
+        
+        return HttpResponse('User not found or not a Manager')
+    
+    return render(request,'manager/manager_forget_pw.html')
+
+
+def manager_otp(request):
+    if request.method == 'POST':
+        eotp=request.POST.get('otp')
+        gotp=request.session.get('managerotp')
+        un = request.session.get('managerun')
+        if int(eotp)==gotp:
+            UO = User.objects.get(username=un)
+            login(request,UO)
+            return HttpResponseRedirect(reverse('manager_change_pw'))
+        return HttpResponse('Otp not Matched')
+    return render(request,'manager/manager_otp.html')
+
+def manager_change_pw(request):
+    if request.method == 'POST':
+        pw = request.POST.get('pw')
+        cpw=request.POST.get('cpw')
+        if pw==cpw:
+            username = request.session.get('managerun')
+            UO = User.objects.get(username=username)
+            UO.set_password(pw)
+            UO.save()
+            return HttpResponseRedirect(reverse('manager_login'))
+        return HttpResponse('password Not Matched')
+    return render(request,'manager/manager_change_pw.html')

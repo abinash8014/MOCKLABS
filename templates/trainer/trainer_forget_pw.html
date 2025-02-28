@@ -1,0 +1,17 @@
+{% extends "trainer/base.html" %}
+
+{% block title %}
+  Forget_pw
+{% endblock title %}
+
+{% block content %}
+  <center>
+    <form method="post">
+        {% csrf_token %}
+        <h2>Towards Changing Password</h2>
+        <label for="un">Enter the Username:</label>
+        <input type="text" name="un"><br><br>
+        <input type="submit" value="send_otp">
+    </form>
+  </center>
+{% endblock content %}

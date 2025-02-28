@@ -14,28 +14,28 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">MockLabs</a>
+          <a class="navbar-brand" href="#"><h2>MockLabs</h2></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'hr_home' %}">Home</a>
+                <button><a class="nav-link active" aria-current="page" href="{% url 'hr_home' %}">Home</a></button>
               </li>
               {% if user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'hr_logout' %}">Logout</a>
+                <button><a class="nav-link" href="{% url 'hr_logout' %}">Logout</a></button>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'mock_ratings' %}">Mock Ratings</a>
+                <button><a class="nav-link" href="{% url 'mock_ratings' %}">Mock Ratings</a></button>
+              </li>
+              <li class="nav-item">
+                <button><a class="nav-link" href="{% url 'schedule_mock' %}">Schedule the Mock</a></button>
               </li>
               {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'hr_login' %}">Login</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="">Something else</a>
+                <button><a class="nav-link" href="{% url 'hr_login' %}">Login</a></button>
               </li>
               {% endif %}
             </ul>

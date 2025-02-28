@@ -1,0 +1,15 @@
+{% extends "hr/base.html" %}
+
+{% block title %}
+  schedule mock
+{% endblock title %}
+
+{% block content %}
+  <center>
+    <h1>Mock Scheduling Page</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ESFO.as_p}}
+      <input type="submit" value="Schedule Mock">
+  </center>
+{% endblock content %}
